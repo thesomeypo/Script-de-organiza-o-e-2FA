@@ -1,0 +1,5 @@
+venv/
+.venv
+fazer.txt
+contas.txt
+__pycache__/
