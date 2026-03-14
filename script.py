@@ -1,5 +1,7 @@
 import pyotp
 import os
+import pyperclip
+import datetime
 
 SENHA_PADRAO = "SUASENHA"
 NOME_ARQUIVO = "contas.txt"
@@ -8,6 +10,10 @@ while True:
     # Essa parte pega o emails
     email = input("Insira o email: ")
     print("email salvo")
+
+    # Puxar data e hora
+    agora = datetime.datetime.now()
+    data = agora.strftime("%d/%m/%Y %H:%M:%S")
 
     # essa parte é responsavel por pedir a 2fa e adicionar a variavel raw_2fa
     raw_2fa = input("🔑 Cole a chave 2FA:")
@@ -18,10 +24,11 @@ while True:
     # Essa parte sera responsavel por pegar a chave limpa da etapa anterior e usa-la para gerar o codigo otp
     totp = pyotp.TOTP(chave_limpa)
     codigo_6_digitos = totp.now() # Aqui é onde sai o codigo valido por 30 segundos
+    pyperclip.copy(codigo_6_digitos) # copiar otp
     print(codigo_6_digitos)
     # Cria a linha organizada do jeito que preciso
     # O \n no final serve para pular a linha
-    linha = f"{email},{SENHA_PADRAO}:{chave_limpa}\n"
+    linha = f"{email},{SENHA_PADRAO}:{chave_limpa} criado em {data}\n"
 
     with open(NOME_ARQUIVO, "a") as arquivo:
         arquivo.write(linha)
